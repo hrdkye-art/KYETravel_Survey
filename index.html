@@ -1042,9 +1042,7 @@
 
     <script>
         const CONFIG = {
-            SHEET_ID: '1wKOV-Nf6JqlE999kVBzcDOOqbTRZe1pxR9XZqtCXV6E',
-            API_KEY: 'AIzaSyBNnRTY4_kk0AQqzNShKbhXsFpPcl7udqU',
-            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx2oJXvte9OS7r0I9WdKX3i6cbCPgqQSGpxBuH5KhNOSI6-TLlla64bLPkUPdcqnxjk/exec'
+            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwNy7Q8tsmREQ8s_7Vca5hOga2IsaNPyclNmdVJa7aqepXBs-wqt8WtqgUSYqxt5yEG/exec'
         };
 
         let employeeData = null;
@@ -1070,20 +1068,21 @@
 
         async function loadEmployeeData() {
             try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/ข้อมูลพนักงาน!A2:D?key=${CONFIG.API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
+                console.log('📥 Loading employee data...');
+                const response = await fetch(`${CONFIG.WEB_APP_URL}?action=getEmployees`);
                 
-                if (data.values) {
-                    allEmployees = data.values.map(row => ({
-                        id: row[0],
-                        division: row[1] || '-',
-                        department: row[2] || '-',
-                        workgroup: row[3] || '-'
-                    }));
+                const result = await response.json();
+                console.log('✅ Employee data loaded:', result.count || 0, 'employees');
+                
+                if (result.status === 'success' && result.employees) {
+                    allEmployees = result.employees;
+                } else {
+                    console.error('❌ Failed to load employees:', result.message);
+                    alert('⚠️ ไม่สามารถโหลดข้อมูลพนักงานได้\n' + (result.message || ''));
                 }
             } catch (error) {
-                console.error('Error loading employee data:', error);
+                console.error('❌ Error loading employee data:', error);
+                alert('⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ\nกรุณาตรวจสอบ:\n1. Apps Script ถูก Deploy แล้ว\n2. Who has access = Anyone\n3. URL ถูกต้อง');
             }
         }
 
@@ -1150,43 +1149,24 @@
 
         async function checkDuplicateData(employeeId) {
             try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/Travel Survey!A:M?key=${CONFIG.API_KEY}`;
-                const response = await fetch(url);
+                console.log('🔍 Checking duplicate for:', employeeId);
+                const response = await fetch(
+                    `${CONFIG.WEB_APP_URL}?action=checkDuplicate&employeeId=${encodeURIComponent(employeeId)}`
+                );
                 
-                if (!response.ok) {
-                    console.warn('Cannot check duplicate via API, allowing submission');
-                    return false;
+                const result = await response.json();
+                console.log('📋 Duplicate check result:', result);
+                
+                if (result.status === 'success' && result.data && result.data.hasDuplicate) {
+                    existingData = result.data.data;
+                    console.log('⚠️ Duplicate found:', existingData);
+                    return true;
                 }
                 
-                const data = await response.json();
-                
-                if (data.values && data.values.length > 1) {
-                    const rows = data.values.slice(1);
-                    const found = rows.find(row => row[1] && row[1].toUpperCase() === employeeId.toUpperCase());
-                    
-                    if (found) {
-                        existingData = {
-                            rowIndex: rows.indexOf(found) + 2,
-                            timestamp: found[0] || '-',
-                            employeeId: found[1] || '-',
-                            division: found[2] || '-',
-                            department: found[3] || '-',
-                            workgroup: found[4] || '-',
-                            travelStatus: found[5] || '-',
-                            province: found[6] || '-',
-                            departureDate: found[7] || '-',
-                            returnDate: found[8] || '-',
-                            companion: found[9] || '-',
-                            travelers: found[10] || '-',
-                            vehicle: found[11] || '-',
-                            leaveType: found[12] || '-'
-                        };
-                        return true;
-                    }
-                }
+                console.log('✅ No duplicate found');
                 return false;
             } catch (error) {
-                console.error('Error checking duplicate:', error);
+                console.error('❌ Error checking duplicate:', error);
                 return false;
             }
         }
@@ -1374,7 +1354,6 @@
                 const leaveTypeGroup = document.getElementById('leaveTypeGroup');
                 
                 if (value === 'ไม่ได้เดินทาง') {
-                    // ซ่อนฟิลด์การเดินทาง
                     provinceGroup.style.display = 'none';
                     departureDateGroup.style.display = 'none';
                     returnDateGroup.style.display = 'none';
@@ -1382,7 +1361,6 @@
                     travelersGroup.style.display = 'none';
                     vehicleGroup.style.display = 'none';
                     
-                    // เคลียร์ค่าฟิลด์การเดินทาง
                     provinceInput.value = '';
                     provinceValue.value = '';
                     provinceOther.value = '';
@@ -1393,12 +1371,10 @@
                     document.getElementById('travelers').value = '';
                     document.getElementById('vehicle').value = '';
                     
-                    // *** แก้ไข: ตั้งค่าการลาเป็น "ไม่ได้ลา" อัตโนมัติ แต่ยังให้เลือกได้ ***
                     document.getElementById('leave0').checked = true;
-                    leaveTypeGroup.style.display = 'block'; // ⚠️ ยังคงแสดงให้เลือกได้
+                    leaveTypeGroup.style.display = 'block';
                     
                 } else if (value === 'เดินทาง') {
-                    // แสดงฟิลด์การเดินทาง
                     provinceGroup.style.display = 'block';
                     departureDateGroup.style.display = 'block';
                     returnDateGroup.style.display = 'block';
@@ -1581,10 +1557,6 @@
             if (!leaveType) {
                 alert('❌ กรุณาเลือกประเภทการลา');
                 console.error('❌ No leave type selected');
-                console.log('Available leave options:');
-                document.querySelectorAll('input[name="leaveType"]').forEach((r, i) => {
-                    console.log(`  ${i+1}. Value: "${r.value}", Checked: ${r.checked}, Disabled: ${r.disabled}, Visible: ${r.closest('.radio-option')?.offsetParent !== null}`);
-                });
                 return;
             }
             
@@ -1664,7 +1636,7 @@
                 travelers: document.getElementById('travelers').value || '-',
                 vehicle: document.getElementById('vehicle').value || '-',
                 leaveType: leaveType.value,
-                isEdit: shouldDeleteOldData  // ⚠️ สำคัญ: บอก Apps Script ว่าเป็นการแก้ไขหรือไม่
+                isEdit: shouldDeleteOldData
             };
             
             console.log('📋 Form Data:', formData);
@@ -1676,34 +1648,26 @@
                 
                 const response = await fetch(CONFIG.WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                     body: JSON.stringify(formData)
                 });
 
-                console.log('📥 Response received');
+                console.log('📥 Response status:', response.status);
                 
-                // เนื่องจากใช้ no-cors จะไม่สามารถอ่าน response ได้
-                // ดังนั้นต้องรอสักครู่แล้วแสดง success
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                const result = await response.json();
+                console.log('📥 Response:', result);
                 
-                console.log('✅ Assuming success (no-cors mode)');
-                showSuccessModal(formData);
-                shouldDeleteOldData = false;
-                existingData = null;
+                if (result.status === 'success') {
+                    console.log('✅ Data saved successfully');
+                    showSuccessModal(formData);
+                    shouldDeleteOldData = false;
+                    existingData = null;
+                } else {
+                    throw new Error(result.message || 'Failed to save data');
+                }
 
             } catch (error) {
                 console.error('❌ Error:', error);
-                
-                // ในโหมด no-cors แม้ error ก็อาจบันทึกสำเร็จได้
-                // แสดง success modal และให้ผู้ใช้ตรวจสอบ Sheet
-                alert('⚠️ ระบบได้ส่งข้อมูลแล้ว\nกรุณาตรวจสอบใน Google Sheet เพื่อยืนยันว่าบันทึกสำเร็จ');
-                
-                showSuccessModal(formData);
-                shouldDeleteOldData = false;
-                existingData = null;
+                alert('❌ เกิดข้อผิดพลาดในการบันทึกข้อมูล\n' + error.message + '\n\nกรุณาตรวจสอบ:\n1. Apps Script ทำงานปกติ\n2. เชื่อมต่ออินเทอร์เน็ตได้');
             }
 
             submitBtn.disabled = false;

@@ -60,6 +60,167 @@
             to { transform: scale(1); opacity: 1; }
         }
 
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2C3E50 0%, #3498db 50%, #2980b9 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: rotate 2s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .loading-spinner {
+                font-size: 50px;
+            }
+        }
+
+        .loading-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .loading-text {
+                font-size: 20px;
+            }
+        }
+
+        .loading-subtext {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .loading-subtext {
+                font-size: 14px;
+            }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots span {
+            animation: pulse 1.5s infinite;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .loading-error {
+            display: none;
+            background: white;
+            color: #e74c3c;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 400px;
+            margin: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .loading-error.show {
+            display: block;
+            animation: zoomIn 0.4s;
+        }
+
+        .loading-error-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .loading-error-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .loading-error-message {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .loading-error {
+                padding: 15px;
+                max-width: 90%;
+            }
+            
+            .loading-error-icon {
+                font-size: 40px;
+            }
+            
+            .loading-error-title {
+                font-size: 18px;
+            }
+            
+            .loading-error-message {
+                font-size: 13px;
+            }
+        }
+
+        .loading-retry-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .loading-retry-btn {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+        }
+
+        .loading-retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+
         .container {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             border-radius: 25px;
@@ -72,6 +233,12 @@
             border: 3px solid rgba(255, 255, 255, 0.5);
             max-height: 90vh;
             overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .container.visible {
+            opacity: 1;
         }
 
         @media (max-width: 768px) {
@@ -872,6 +1039,26 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner">🔄</div>
+            <div class="loading-text">กำลังโหลดข้อมูล</div>
+            <div class="loading-subtext">
+                กรุณารอสักครู่<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            
+            <div class="loading-error" id="loadingError">
+                <div class="loading-error-icon">❌</div>
+                <div class="loading-error-title">ไม่สามารถโหลดข้อมูลได้</div>
+                <div class="loading-error-message" id="loadingErrorMessage">
+                    เกิดข้อผิดพลาดในการเชื่อมต่อ<br>
+                    กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+                </div>
+                <button class="loading-retry-btn" onclick="retryLoadData()">🔄 ลองใหม่อีกครั้ง</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>แบบสำรวจการเดินทางช่วงปีใหม่</h1>
@@ -1049,6 +1236,8 @@
         let allEmployees = [];
         let existingData = null;
         let shouldDeleteOldData = false;
+        let isDataLoaded = false;
+        let isLoadingData = false;
         
         const provinces = [
             'กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี', 'สมุทรปราการ', 'สมุทรสาคร', 'นครปฐม',
@@ -1067,26 +1256,82 @@
         ];
 
         async function loadEmployeeData() {
+            if (isLoadingData || isDataLoaded) {
+                console.log('⚠️ Already loading or loaded');
+                return;
+            }
+            
+            isLoadingData = true;
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingError = document.getElementById('loadingError');
+            const loadingErrorMessage = document.getElementById('loadingErrorMessage');
+
             try {
                 console.log('📥 Loading employee data...');
+                
                 const response = await fetch(`${CONFIG.WEB_APP_URL}?action=getEmployees`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 
                 const result = await response.json();
                 console.log('✅ Employee data loaded:', result.count || 0, 'employees');
                 
                 if (result.status === 'success' && result.employees) {
                     allEmployees = result.employees;
+                    isDataLoaded = true;
+                    isLoadingData = false;
+                    
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        document.querySelector('.container').classList.add('visible');
+                        setTimeout(() => {
+                            document.getElementById('employeeId').focus();
+                        }, 100);
+                    }, 500);
+                    
                 } else {
-                    console.error('❌ Failed to load employees:', result.message);
-                    alert('⚠️ ไม่สามารถโหลดข้อมูลพนักงานได้\n' + (result.message || ''));
+                    throw new Error(result.message || 'ไม่สามารถโหลดข้อมูลพนักงานได้');
                 }
             } catch (error) {
                 console.error('❌ Error loading employee data:', error);
-                alert('⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ\nกรุณาตรวจสอบ:\n1. Apps Script ถูก Deploy แล้ว\n2. Who has access = Anyone\n3. URL ถูกต้อง');
+                isLoadingData = false;
+                
+                loadingErrorMessage.innerHTML = `
+                    เกิดข้อผิดพลาดในการโหลดข้อมูล<br><br>
+                    <strong>รายละเอียด:</strong> ${error.message}<br><br>
+                    กรุณาตรวจสอบ:<br>
+                    1. Apps Script ถูก Deploy แล้ว<br>
+                    2. Who has access = Anyone<br>
+                    3. URL ถูกต้อง<br>
+                    4. เชื่อมต่ออินเทอร์เน็ตได้
+                `;
+                loadingError.classList.add('show');
+                isDataLoaded = false;
             }
         }
 
+        function retryLoadData() {
+            const loadingError = document.getElementById('loadingError');
+            loadingError.classList.remove('show');
+            isLoadingData = false;
+            isDataLoaded = false;
+            loadEmployeeData();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadEmployeeData);
+        } else {
+            loadEmployeeData();
+        }
+
         async function searchEmployee() {
+            if (!isDataLoaded) {
+                alert('⚠️ กรุณารอให้โหลดข้อมูลเสร็จก่อน');
+                return;
+            }
+
             const employeeIdInput = document.getElementById('employeeId');
             const employeeId = employeeIdInput.value.trim().toUpperCase();
             const errorDiv = document.getElementById('employeeIdError');
@@ -1360,6 +1605,7 @@
                     companionGroup.style.display = 'none';
                     travelersGroup.style.display = 'none';
                     vehicleGroup.style.display = 'none';
+                    leaveTypeGroup.style.display = 'block';
                     
                     provinceInput.value = '';
                     provinceValue.value = '';
@@ -1372,7 +1618,6 @@
                     document.getElementById('vehicle').value = '';
                     
                     document.getElementById('leave0').checked = true;
-                    leaveTypeGroup.style.display = 'block';
                     
                 } else if (value === 'เดินทาง') {
                     provinceGroup.style.display = 'block';
@@ -1673,8 +1918,6 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span style="position: relative; z-index: 1;">💾 บันทึกข้อมูล</span>';
         });
-
-        loadEmployeeData();
     </script>
 </body>
 </html>

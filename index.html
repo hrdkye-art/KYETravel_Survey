@@ -1422,7 +1422,7 @@
             let infoHTML = `
                 <div class="duplicate-info-row">
                     <span class="duplicate-info-label">⏰ วันที่กรอก:</span>
-                    <span class="duplicate-info-value">${data.timestamp}</span>
+                    <span class="duplicate-info-value">${formatThaiDateTime(data.timestamp)}</span>
                 </div>
                 <div class="duplicate-info-row">
                     <span class="duplicate-info-label">👤 รหัสพนักงาน:</span>
@@ -1442,11 +1442,11 @@
                     </div>
                     <div class="duplicate-info-row">
                         <span class="duplicate-info-label">📅 วันที่ไป:</span>
-                        <span class="duplicate-info-value">${data.departureDate}</span>
+                        <span class="duplicate-info-value">${formatThaiDate(data.departureDate)}</span>
                     </div>
                     <div class="duplicate-info-row">
                         <span class="duplicate-info-label">🔙 วันที่กลับ:</span>
-                        <span class="duplicate-info-value">${data.returnDate}</span>
+                        <span class="duplicate-info-value">${formatThaiDate(data.returnDate)}</span>
                     </div>
                     <div class="duplicate-info-row">
                         <span class="duplicate-info-label">👥 จำนวนคน:</span>
@@ -1682,14 +1682,60 @@
         document.getElementById('departureDate').addEventListener('change', calculateTravelDays);
         document.getElementById('returnDate').addEventListener('change', calculateTravelDays);
 
+        function formatThaiDateTime(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            
+            try {
+                let date;
+                
+                // ถ้าเป็น ISO format
+                if (dateString.includes('T') || dateString.includes('Z')) {
+                    date = new Date(dateString);
+                } 
+                // ถ้าเป็น format ไทย เช่น "3/11/2568 14:29:51"
+                else if (dateString.includes('/')) {
+                    return dateString; // คืนค่าเดิมถ้าเป็นภาษาไทยอยู่แล้ว
+                }
+                // ถ้าเป็น format อื่นๆ
+                else {
+                    date = new Date(dateString);
+                }
+                
+                // ตรวจสอบว่า date ถูกต้อง
+                if (isNaN(date.getTime())) return dateString;
+                
+                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const day = date.getDate();
+                const month = thaiMonths[date.getMonth()];
+                const year = date.getFullYear() + 543;
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                
+                return `${day} ${month} ${year} ${hours}:${minutes} น.`;
+            } catch (error) {
+                console.error('Error formatting datetime:', error);
+                return dateString;
+            }
+        }
+
         function formatThaiDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-            const day = date.getDate();
-            const month = thaiMonths[date.getMonth()];
-            const year = date.getFullYear() + 543;
-            return `${day} ${month} ${year}`;
+            if (!dateString || dateString === '-') return '-';
+            
+            try {
+                const date = new Date(dateString);
+                
+                // ตรวจสอบว่า date ถูกต้อง
+                if (isNaN(date.getTime())) return dateString;
+                
+                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const day = date.getDate();
+                const month = thaiMonths[date.getMonth()];
+                const year = date.getFullYear() + 543;
+                return `${day} ${month} ${year}`;
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return dateString;
+            }
         }
 
         function showSuccessModal(formData) {

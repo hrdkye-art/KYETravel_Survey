@@ -228,7 +228,6 @@
         let employeeData = null, existingData = null, shouldDeleteOldData = false;
         const provinces = ['กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี', 'สมุทรปราการ', 'สมุทรสาคร', 'นครปฐม', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร', 'ขอนแก่น', 'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่', 'ตรัง', 'ตราด', 'ตาก', 'นครนายก', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราช', 'นครสวรรค์', 'นราธิวาส', 'น่าน', 'บึงกาฬ', 'บุรีรัมย์', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พะเยา', 'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'ภูเก็ต', 'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน', 'ยโสธร', 'ยะลา', 'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี', 'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรสงคราม', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อำนาจเจริญ', 'อุดรธานี', 'อุตรดิตถ์', 'อุทัยธานี', 'อุบลราชธานี', '🇨🇳 จีน', '🇯🇵 ญี่ปุ่น', '🇰🇷 เกาหลีใต้', '🇰🇭 กัมพูชา', '🇱🇦 ลาว', '🇲🇲 พม่า', '🇲🇾 มาเลเซีย', '🇸🇬 สิงคโปร์', '🇻🇳 เวียดนาม', 'อื่นๆ'];
 
-        // ✅ ค้นหาพนักงานจาก server (ปรับปรุงแล้ว - เร็วขึ้น)
         async function searchEmployee() {
             const employeeIdInput = document.getElementById('employeeId');
             const employeeId = employeeIdInput.value.trim().toUpperCase();
@@ -251,7 +250,6 @@
             restOfForm.classList.remove('show');
 
             try {
-                // ✅ เรียก API ครั้งเดียว - ได้ทั้งข้อมูลพนักงานและ duplicate check
                 const response = await fetch(`${CONFIG.WEB_APP_URL}?action=searchEmployee&employeeId=${encodeURIComponent(employeeId)}`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
@@ -264,7 +262,6 @@
                     employeeData = employee;
                     employeeIdInput.value = employeeId;
                     
-                    // ✅ ตรวจสอบข้อมูลซ้ำจาก response เดียวกัน (ไม่ต้องเรียก API อีกครั้ง)
                     if (result.data.hasDuplicate && result.data.duplicateData) { 
                         existingData = result.data.duplicateData;
                         showDuplicateModal(existingData); 
@@ -484,86 +481,23 @@
         document.getElementById('departureDate').addEventListener('change', calculateTravelDays);
         document.getElementById('returnDate').addEventListener('change', calculateTravelDays);
 
-function formatThaiDateTime(dateString) {
-            if (!dateString || dateString === '-') return '-';
-            
-            // ✅ Debug: ดูรูปแบบข้อมูลที่ส่งมา
-            console.log('Input dateString:', dateString);
-            
-            try {
-                let date;
-                let yearValue; // เก็บค่าปีไว้ตรวจสอบ
-                
-                if (dateString.includes('T') || dateString.includes('Z')) {
-                    // ISO format (ค.ศ.)
-                    date = new Date(dateString);
-                } else if (dateString.includes('/')) {
-                    // รูปแบบ DD/MM/YYYY HH:MM หรือ D/M/YYYY HH:MM
-                    const parts = dateString.split(' ');
-                    const dateParts = parts[0].split('/');
-                    const timeParts = parts[1] ? parts[1].split(':') : ['00', '00'];
-                    
-                    const day = parseInt(dateParts[0]);
-                    const month = parseInt(dateParts[1]) - 1;
-                    yearValue = parseInt(dateParts[2]);
-                    
-                    console.log('Parsed year:', yearValue); // ✅ Debug ปี
-                    
-                    // ✅ ถ้าปี > 2500 แสดงว่าเป็น พ.ศ. ต้องแปลงเป็น ค.ศ. ก่อน
-                    let year = yearValue;
-                    if (year > 2500) {
-                        year = year - 543;
-                    }
-                    
-                    date = new Date(year, month, day, parseInt(timeParts[0]), parseInt(timeParts[1]));
-                } else {
-                    date = new Date(dateString);
-                }
-                
-                if (isNaN(date.getTime())) {
-                    console.log('Invalid date');
-                    return dateString;
-                }
-                
-                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-                const day = date.getDate();
-                const month = thaiMonths[date.getMonth()];
-                
-                // ✅ ตอนนี้ date.getFullYear() คืนค่าเป็น ค.ศ. เสมอ ให้บวก 543
-                const year = date.getFullYear() + 543;
-                
-                const hours = date.getHours().toString().padStart(2, '0');
-                const minutes = date.getMinutes().toString().padStart(2, '0');
-                
-                const result = `${day} ${month} ${year} ${hours}:${minutes} น.`;
-                console.log('Output:', result); // ✅ Debug ผลลัพธ์
-                
-                return result;
-            } catch (error) { 
-                console.log('Error:', error);
-                return dateString; 
-            }
-        }
-function formatThaiDateTime(dateString) {
+        function formatThaiDateTime(dateString) {
             if (!dateString || dateString === '-') return '-';
             
             try {
                 let date;
                 
                 if (dateString.includes('T') || dateString.includes('Z')) {
-                    // ✅ ISO format - แต่ต้องเช็คว่าปีเป็น พ.ศ. หรือไม่
                     const yearMatch = dateString.match(/^(\d{4})-/);
                     if (yearMatch) {
                         const year = parseInt(yearMatch[1]);
                         if (year > 2500) {
-                            // ✅ เป็น พ.ศ. แปลงเป็น ค.ศ. ก่อน
                             const christianYear = year - 543;
                             dateString = dateString.replace(/^(\d{4})/, christianYear.toString());
                         }
                     }
                     date = new Date(dateString);
                 } else if (dateString.includes('/')) {
-                    // รูปแบบ DD/MM/YYYY HH:MM หรือ D/M/YYYY HH:MM
                     const parts = dateString.split(' ');
                     const dateParts = parts[0].split('/');
                     const timeParts = parts[1] ? parts[1].split(':') : ['00', '00'];
@@ -572,7 +506,6 @@ function formatThaiDateTime(dateString) {
                     const month = parseInt(dateParts[1]) - 1;
                     let year = parseInt(dateParts[2]);
                     
-                    // ✅ ถ้าปี > 2500 แสดงว่าเป็น พ.ศ. ต้องแปลงเป็น ค.ศ. ก่อน
                     if (year > 2500) {
                         year = year - 543;
                     }
@@ -587,8 +520,6 @@ function formatThaiDateTime(dateString) {
                 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
                 const day = date.getDate();
                 const month = thaiMonths[date.getMonth()];
-                
-                // ✅ ตอนนี้ date.getFullYear() คืนค่าเป็น ค.ศ. เสมอ ให้บวก 543
                 const year = date.getFullYear() + 543;
                 
                 const hours = date.getHours().toString().padStart(2, '0');
@@ -599,6 +530,48 @@ function formatThaiDateTime(dateString) {
                 return dateString; 
             }
         }
+
+        function formatThaiDate(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            try {
+                let date;
+                
+                if (dateString.includes('T') || dateString.includes('Z')) {
+                    const yearMatch = dateString.match(/^(\d{4})-/);
+                    if (yearMatch) {
+                        const year = parseInt(yearMatch[1]);
+                        if (year > 2500) {
+                            const christianYear = year - 543;
+                            dateString = dateString.replace(/^(\d{4})/, christianYear.toString());
+                        }
+                    }
+                    date = new Date(dateString);
+                } else if (dateString.includes('/')) {
+                    const dateParts = dateString.split('/');
+                    const day = parseInt(dateParts[0]);
+                    const month = parseInt(dateParts[1]) - 1;
+                    let year = parseInt(dateParts[2]);
+                    if (year > 2500) {
+                        year = year - 543;
+                    }
+                    date = new Date(year, month, day);
+                } else {
+                    date = new Date(dateString);
+                }
+                
+                if (isNaN(date.getTime())) return dateString;
+                
+                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const day = date.getDate();
+                const month = thaiMonths[date.getMonth()];
+                const year = date.getFullYear() + 543;
+                
+                return `${day} ${month} ${year}`;
+            } catch (error) { 
+                return dateString; 
+            }
+        }
+
         function showSuccessModal(formData) {
             const summaryBox = document.getElementById('summaryBox');
             let summaryHTML = `<div class="summary-row"><span class="summary-label">👤 รหัสพนักงาน:</span><span class="summary-value">${formData.employeeId}</span></div><div class="summary-row"><span class="summary-label">🚗 สถานะ:</span><span class="summary-value">${formData.travelStatus}</span></div>`;

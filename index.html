@@ -8,23 +8,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #2C3E50 0%, #3498db 50%, #2980b9 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         @media (max-width: 768px) { body { padding: 10px; } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #2C3E50 0%, #3498db 50%, #2980b9 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s, visibility 0.5s; }
-        .loading-screen.hidden { opacity: 0; visibility: hidden; }
-        .loading-content { text-align: center; color: white; }
-        .loading-spinner { font-size: 60px; margin-bottom: 20px; animation: rotate 2s linear infinite; }
-        .loading-text { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
-        .loading-subtext { font-size: 16px; opacity: 0.9; }
-        .container { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 25px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); max-width: 650px; width: 100%; padding: 25px; border: 3px solid rgba(255, 255, 255, 0.5); max-height: 90vh; overflow-y: auto; opacity: 0; transition: opacity 0.5s; }
-        .container.visible { opacity: 1; }
+        .container { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 25px; box-shadow: 0 30px 80px rgba(0,0,0,0.3); max-width: 650px; width: 100%; padding: 25px; border: 3px solid rgba(255, 255, 255, 0.5); max-height: 90vh; overflow-y: auto; }
         @media (max-width: 768px) { .container { padding: 20px 15px; border-radius: 15px; margin: 10px; max-height: 95vh; } }
         .header { text-align: center; margin-bottom: 25px; }
-        .header::before { content: '✈️🎉🌟'; font-size: 40px; display: block; margin-bottom: 10px; animation: bounce 2s infinite; }
+        .header::before { content: '✈️🎉🌟'; font-size: 40px; display: block; margin-bottom: 10px; }
         .header h1 { background: linear-gradient(135deg, #e74c3c, #f39c12, #e74c3c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 24px; font-weight: 800; margin-bottom: 10px; line-height: 1.3; }
         .holiday-badge { display: inline-block; background: linear-gradient(135deg, #f39c12, #e74c3c); color: white; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4); }
         .form-group { margin-bottom: 20px; }
@@ -73,12 +62,11 @@
         .error.show { display: block; }
         .loading { text-align: center; color: #3498db; margin-top: 12px; display: none; font-weight: 600; animation: pulse 1.5s infinite; }
         .loading.show { display: block; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; animation: fadeIn 0.3s; padding: 10px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 10px; }
         .modal-overlay.show { display: flex; }
-        .duplicate-modal, .success-modal { background: white; border-radius: 25px; padding: 35px; max-width: 600px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); animation: zoomIn 0.4s; max-height: 90vh; overflow-y: auto; }
+        .duplicate-modal, .success-modal { background: white; border-radius: 25px; padding: 35px; max-width: 600px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); max-height: 90vh; overflow-y: auto; }
         .success-modal { max-width: 500px; }
         .duplicate-icon, .success-icon { font-size: 70px; margin-bottom: 15px; }
-        .success-icon { animation: bounce 1s infinite; }
         .duplicate-modal h2 { color: #f39c12; font-size: 24px; margin-bottom: 15px; font-weight: 800; }
         .success-modal h2 { color: #27ae60; font-size: 24px; margin-bottom: 15px; font-weight: 800; }
         .duplicate-info { background: #fff3cd; border: 2px solid #f39c12; border-radius: 15px; padding: 18px; margin: 20px 0; text-align: left; }
@@ -109,14 +97,6 @@
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loading-spinner">🔄</div>
-            <div class="loading-text">เตรียมความพร้อม</div>
-            <div class="loading-subtext">กรุณารอสักครู่...</div>
-        </div>
-    </div>
-
     <div class="container">
         <div class="header">
             <h1>แบบสำรวจการเดินทางช่วงปีใหม่</h1>
@@ -127,7 +107,7 @@
             <div class="form-group">
                 <label for="employeeId">รหัสพนักงาน <span class="required">*</span></label>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="employeeId" required placeholder="กรอกรหัสพนักงาน" style="flex: 1;">
+                    <input type="text" id="employeeId" required placeholder="กรอกรหัสพนักงาน" style="flex: 1;" autocomplete="off">
                     <button type="button" id="searchBtn" class="search-btn">🔍 ค้นหา</button>
                 </div>
                 <div class="error" id="employeeIdError"></div>
@@ -244,21 +224,11 @@
     </div>
 
     <script>
-        const CONFIG = { WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxaHu7Tzz2ybsShqZFk9NDzAP9IZxf72--jkktEEMsLYUtI01q2tcwyHHX7fzFd12vH/exec' };
+        const CONFIG = { WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx3YBvrR8Zi_kkrwdwzg7CndMcSohfFMWCFJ1Je-F-N90zduUTPItQS3k6MfA7s8U2N/exec' };
         let employeeData = null, existingData = null, shouldDeleteOldData = false;
         const provinces = ['กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี', 'สมุทรปราการ', 'สมุทรสาคร', 'นครปฐม', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร', 'ขอนแก่น', 'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่', 'ตรัง', 'ตราด', 'ตาก', 'นครนายก', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราช', 'นครสวรรค์', 'นราธิวาส', 'น่าน', 'บึงกาฬ', 'บุรีรัมย์', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พะเยา', 'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'ภูเก็ต', 'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน', 'ยโสธร', 'ยะลา', 'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี', 'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรสงคราม', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อำนาจเจริญ', 'อุดรธานี', 'อุตรดิตถ์', 'อุทัยธานี', 'อุบลราชธานี', '🇨🇳 จีน', '🇯🇵 ญี่ปุ่น', '🇰🇷 เกาหลีใต้', '🇰🇭 กัมพูชา', '🇱🇦 ลาว', '🇲🇲 พม่า', '🇲🇾 มาเลเซีย', '🇸🇬 สิงคโปร์', '🇻🇳 เวียดนาม', 'อื่นๆ'];
 
-        // โหลดหน้าเว็บ - ไม่ต้องโหลดข้อมูลล่วงหน้า
-        window.addEventListener('DOMContentLoaded', function() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            setTimeout(() => { 
-                loadingScreen.classList.add('hidden'); 
-                document.querySelector('.container').classList.add('visible'); 
-                setTimeout(() => document.getElementById('employeeId').focus(), 100); 
-            }, 500);
-        });
-
-        // ค้นหาพนักงานจาก server
+        // ✅ ค้นหาพนักงานจาก server (ปรับปรุงแล้ว - เร็วขึ้น)
         async function searchEmployee() {
             const employeeIdInput = document.getElementById('employeeId');
             const employeeId = employeeIdInput.value.trim().toUpperCase();
@@ -281,34 +251,31 @@
             restOfForm.classList.remove('show');
 
             try {
-                // เรียก API searchEmployee
+                // ✅ เรียก API ครั้งเดียว - ได้ทั้งข้อมูลพนักงานและ duplicate check
                 const response = await fetch(`${CONFIG.WEB_APP_URL}?action=searchEmployee&employeeId=${encodeURIComponent(employeeId)}`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const result = await response.json();
                 
+                loadingDiv.classList.remove('show');
+                
                 if (result.status === 'success' && result.data && result.data.employee) {
                     const employee = result.data.employee;
+                    employeeData = employee;
+                    employeeIdInput.value = employeeId;
                     
-                    // ตรวจสอบข้อมูลซ้ำ
-                    const hasDuplicate = await checkDuplicateData(employeeId); 
-                    loadingDiv.classList.remove('show');
-                    
-                    if (hasDuplicate) { 
+                    // ✅ ตรวจสอบข้อมูลซ้ำจาก response เดียวกัน (ไม่ต้องเรียก API อีกครั้ง)
+                    if (result.data.hasDuplicate && result.data.duplicateData) { 
+                        existingData = result.data.duplicateData;
                         showDuplicateModal(existingData); 
-                        employeeIdInput.value = employeeId; 
-                        employeeData = employee; 
                     } else { 
-                        employeeIdInput.value = employeeId; 
                         document.getElementById('division').textContent = employee.division; 
                         document.getElementById('department').textContent = employee.department; 
                         document.getElementById('workgroup').textContent = employee.workgroup; 
                         infoDiv.classList.add('show'); 
-                        employeeData = employee; 
                         setTimeout(() => restOfForm.classList.add('show'), 300); 
                     }
                 } else { 
-                    loadingDiv.classList.remove('show'); 
                     errorDiv.textContent = 'ไม่พบรหัสพนักงานนี้ในระบบ'; 
                     errorDiv.classList.add('show'); 
                     employeeData = null; 
@@ -317,20 +284,6 @@
                 loadingDiv.classList.remove('show'); 
                 errorDiv.textContent = 'เกิดข้อผิดพลาดในการค้นหาข้อมูล: ' + error.message; 
                 errorDiv.classList.add('show'); 
-            }
-        }
-
-        async function checkDuplicateData(employeeId) {
-            try {
-                const response = await fetch(`${CONFIG.WEB_APP_URL}?action=checkDuplicate&employeeId=${encodeURIComponent(employeeId)}`);
-                const result = await response.json();
-                if (result.status === 'success' && result.data && result.data.hasDuplicate) { 
-                    existingData = result.data.data; 
-                    return true; 
-                }
-                return false;
-            } catch (error) { 
-                return false; 
             }
         }
 
@@ -531,19 +484,86 @@
         document.getElementById('departureDate').addEventListener('change', calculateTravelDays);
         document.getElementById('returnDate').addEventListener('change', calculateTravelDays);
 
-    function formatThaiDateTime(dateString) {
+function formatThaiDateTime(dateString) {
             if (!dateString || dateString === '-') return '-';
+            
+            // ✅ Debug: ดูรูปแบบข้อมูลที่ส่งมา
+            console.log('Input dateString:', dateString);
+            
             try {
-                // ถ้าเป็นรูปแบบวันที่ไทยอยู่แล้ว ให้คืนค่ากลับไปเลย
-                if (dateString.includes('พ.ย.') || dateString.includes('ธ.ค.') || dateString.includes('ม.ค.')) {
+                let date;
+                let yearValue; // เก็บค่าปีไว้ตรวจสอบ
+                
+                if (dateString.includes('T') || dateString.includes('Z')) {
+                    // ISO format (ค.ศ.)
+                    date = new Date(dateString);
+                } else if (dateString.includes('/')) {
+                    // รูปแบบ DD/MM/YYYY HH:MM หรือ D/M/YYYY HH:MM
+                    const parts = dateString.split(' ');
+                    const dateParts = parts[0].split('/');
+                    const timeParts = parts[1] ? parts[1].split(':') : ['00', '00'];
+                    
+                    const day = parseInt(dateParts[0]);
+                    const month = parseInt(dateParts[1]) - 1;
+                    yearValue = parseInt(dateParts[2]);
+                    
+                    console.log('Parsed year:', yearValue); // ✅ Debug ปี
+                    
+                    // ✅ ถ้าปี > 2500 แสดงว่าเป็น พ.ศ. ต้องแปลงเป็น ค.ศ. ก่อน
+                    let year = yearValue;
+                    if (year > 2500) {
+                        year = year - 543;
+                    }
+                    
+                    date = new Date(year, month, day, parseInt(timeParts[0]), parseInt(timeParts[1]));
+                } else {
+                    date = new Date(dateString);
+                }
+                
+                if (isNaN(date.getTime())) {
+                    console.log('Invalid date');
                     return dateString;
                 }
                 
+                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                const day = date.getDate();
+                const month = thaiMonths[date.getMonth()];
+                
+                // ✅ ตอนนี้ date.getFullYear() คืนค่าเป็น ค.ศ. เสมอ ให้บวก 543
+                const year = date.getFullYear() + 543;
+                
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                
+                const result = `${day} ${month} ${year} ${hours}:${minutes} น.`;
+                console.log('Output:', result); // ✅ Debug ผลลัพธ์
+                
+                return result;
+            } catch (error) { 
+                console.log('Error:', error);
+                return dateString; 
+            }
+        }
+function formatThaiDateTime(dateString) {
+            if (!dateString || dateString === '-') return '-';
+            
+            try {
                 let date;
+                
                 if (dateString.includes('T') || dateString.includes('Z')) {
+                    // ✅ ISO format - แต่ต้องเช็คว่าปีเป็น พ.ศ. หรือไม่
+                    const yearMatch = dateString.match(/^(\d{4})-/);
+                    if (yearMatch) {
+                        const year = parseInt(yearMatch[1]);
+                        if (year > 2500) {
+                            // ✅ เป็น พ.ศ. แปลงเป็น ค.ศ. ก่อน
+                            const christianYear = year - 543;
+                            dateString = dateString.replace(/^(\d{4})/, christianYear.toString());
+                        }
+                    }
                     date = new Date(dateString);
                 } else if (dateString.includes('/')) {
-                    // รูปแบบ DD/MM/YYYY HH:MM
+                    // รูปแบบ DD/MM/YYYY HH:MM หรือ D/M/YYYY HH:MM
                     const parts = dateString.split(' ');
                     const dateParts = parts[0].split('/');
                     const timeParts = parts[1] ? parts[1].split(':') : ['00', '00'];
@@ -552,7 +572,7 @@
                     const month = parseInt(dateParts[1]) - 1;
                     let year = parseInt(dateParts[2]);
                     
-                    // ถ้าปีมากกว่า 2500 แสดงว่าเป็น พ.ศ. อยู่แล้ว ต้องแปลงเป็น ค.ศ. ก่อน
+                    // ✅ ถ้าปี > 2500 แสดงว่าเป็น พ.ศ. ต้องแปลงเป็น ค.ศ. ก่อน
                     if (year > 2500) {
                         year = year - 543;
                     }
@@ -567,7 +587,10 @@
                 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
                 const day = date.getDate();
                 const month = thaiMonths[date.getMonth()];
+                
+                // ✅ ตอนนี้ date.getFullYear() คืนค่าเป็น ค.ศ. เสมอ ให้บวก 543
                 const year = date.getFullYear() + 543;
+                
                 const hours = date.getHours().toString().padStart(2, '0');
                 const minutes = date.getMinutes().toString().padStart(2, '0');
                 
@@ -576,24 +599,6 @@
                 return dateString; 
             }
         }
-
-        function formatThaiDate(dateString) {
-            if (!dateString || dateString === '-') return '-';
-            try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) return dateString;
-                
-                const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-                const day = date.getDate();
-                const month = thaiMonths[date.getMonth()];
-                const year = date.getFullYear() + 543;
-                
-                return `${day} ${month} ${year}`;
-            } catch (error) { 
-                return dateString; 
-            }
-        }
-
         function showSuccessModal(formData) {
             const summaryBox = document.getElementById('summaryBox');
             let summaryHTML = `<div class="summary-row"><span class="summary-label">👤 รหัสพนักงาน:</span><span class="summary-value">${formData.employeeId}</span></div><div class="summary-row"><span class="summary-label">🚗 สถานะ:</span><span class="summary-value">${formData.travelStatus}</span></div>`;

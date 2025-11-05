@@ -185,13 +185,21 @@
                     </select>
                 </div>
 
-                <div class="form-group" id="leaveTypeGroup">
-                    <label>ประเภทการลาต่อจากวันหยุด <span class="required">*</span></label>
+                <div class="form-group" id="leaveBeforeGroup">
+                    <label>การลาก่อนวันหยุด <span class="required">*</span></label>
                     <div class="radio-group" style="flex-direction: column; gap: 10px;">
-                        <div class="radio-option"><input type="radio" id="leave0" name="leaveType" value="ไม่ได้ลา" required><label for="leave0">ไม่ได้ลา</label></div>
-                        <div class="radio-option"><input type="radio" id="leave1" name="leaveType" value="ลาต่อจากวันหยุด 1 วัน (5 มกราคม 2568)" required><label for="leave1">ลาต่อจากวันหยุด 1 วัน<br><small style="color: #7f8c8d;">(5 มกราคม 2568)</small></label></div>
-                        <div class="radio-option"><input type="radio" id="leave2" name="leaveType" value="ลาต่อจากวันหยุด 2 วัน (5-6 มกราคม 2568)" required><label for="leave2">ลาต่อจากวันหยุด 2 วัน<br><small style="color: #7f8c8d;">(5-6 มกราคม 2568)</small></label></div>
-                        <div class="radio-option"><input type="radio" id="leave3" name="leaveType" value="ลาต่อจากวันหยุด 3 วัน (5-7 มกราคม 2568)" required><label for="leave3">ลาต่อจากวันหยุด 3 วัน<br><small style="color: #7f8c8d;">(5-7 มกราคม 2568)</small></label></div>
+                        <div class="radio-option"><input type="radio" id="leaveBefore0" name="leaveBefore" value="ไม่ได้ลา" required><label for="leaveBefore0">ไม่ได้ลา</label></div>
+                        <div class="radio-option"><input type="radio" id="leaveBefore1" name="leaveBefore" value="ลาก่อนวันหยุด 1 วัน (26 ธันวาคม 2568)" required><label for="leaveBefore1">ลาก่อนวันหยุด 1 วัน<br><small style="color: #7f8c8d;">(26 ธันวาคม 2568)</small></label></div>
+                        <div class="radio-option"><input type="radio" id="leaveBefore2" name="leaveBefore" value="ลาก่อนวันหยุด 2 วัน (25-26 ธันวาคม 2568)" required><label for="leaveBefore2">ลาก่อนวันหยุด 2 วัน<br><small style="color: #7f8c8d;">(25-26 ธันวาคม 2568)</small></label></div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="leaveAfterGroup">
+                    <label>การลาหลังวันหยุด <span class="required">*</span></label>
+                    <div class="radio-group" style="flex-direction: column; gap: 10px;">
+                        <div class="radio-option"><input type="radio" id="leaveAfter0" name="leaveAfter" value="ไม่ได้ลา" required><label for="leaveAfter0">ไม่ได้ลา</label></div>
+                        <div class="radio-option"><input type="radio" id="leaveAfter1" name="leaveAfter" value="ลาหลังวันหยุด 1 วัน (5 มกราคม 2569)" required><label for="leaveAfter1">ลาหลังวันหยุด 1 วัน<br><small style="color: #7f8c8d;">(5 มกราคม 2569)</small></label></div>
+                        <div class="radio-option"><input type="radio" id="leaveAfter2" name="leaveAfter" value="ลาหลังวันหยุด 2 วัน (5-6 มกราคม 2569)" required><label for="leaveAfter2">ลาหลังวันหยุด 2 วัน<br><small style="color: #7f8c8d;">(5-6 มกราคม 2569)</small></label></div>
                     </div>
                 </div>
 
@@ -224,7 +232,7 @@
     </div>
 
     <script>
-        const CONFIG = { WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx3YBvrR8Zi_kkrwdwzg7CndMcSohfFMWCFJ1Je-F-N90zduUTPItQS3k6MfA7s8U2N/exec' };
+        const CONFIG = { WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwvHfBYBgLS_Nl1S3CkzPv8Cyc8-L0W4qLqnDCDmohEt1Vph7xmyunLYOB3QIx04Qp4/exec' };
         let employeeData = null, existingData = null, shouldDeleteOldData = false;
         const provinces = ['กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี', 'สมุทรปราการ', 'สมุทรสาคร', 'นครปฐม', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร', 'ขอนแก่น', 'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่', 'ตรัง', 'ตราด', 'ตาก', 'นครนายก', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราช', 'นครสวรรค์', 'นราธิวาส', 'น่าน', 'บึงกาฬ', 'บุรีรัมย์', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พะเยา', 'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'ภูเก็ต', 'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน', 'ยโสธร', 'ยะลา', 'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี', 'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรสงคราม', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อ่างทอง', 'อำนาจเจริญ', 'อุดรธานี', 'อุตรดิตถ์', 'อุทัยธานี', 'อุบลราชธานี', '🇨🇳 จีน', '🇯🇵 ญี่ปุ่น', '🇰🇷 เกาหลีใต้', '🇰🇭 กัมพูชา', '🇱🇦 ลาว', '🇲🇲 พม่า', '🇲🇾 มาเลเซีย', '🇸🇬 สิงคโปร์', '🇻🇳 เวียดนาม', 'อื่นๆ'];
 
@@ -290,7 +298,7 @@
             if (data.travelStatus === 'เดินทาง') {
                 infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">📍 จังหวัด/ประเทศ:</span><span class="duplicate-info-value">${data.province}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">📅 วันที่ไป:</span><span class="duplicate-info-value">${formatThaiDate(data.departureDate)}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">🔙 วันที่กลับ:</span><span class="duplicate-info-value">${formatThaiDate(data.returnDate)}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">👥 จำนวนคน:</span><span class="duplicate-info-value">${data.travelers} คน</span></div>`;
             }
-            infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">📅 การลา:</span><span class="duplicate-info-value">${data.leaveType}</span></div>`;
+            infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">📅 การลาก่อนวันหยุด:</span><span class="duplicate-info-value">${data.leaveBefore || 'ไม่ได้ลา'}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">📅 การลาหลังวันหยุด:</span><span class="duplicate-info-value">${data.leaveAfter || 'ไม่ได้ลา'}</span></div>`;
             duplicateInfo.innerHTML = infoHTML; 
             document.getElementById('duplicateModal').classList.add('show');
         }
@@ -399,7 +407,8 @@
                 const companionGroup = document.querySelector('[for="companion"]').parentElement;
                 const travelersGroup = document.querySelector('[for="travelers"]').parentElement;
                 const vehicleGroup = document.getElementById('vehicleGroup');
-                const leaveTypeGroup = document.getElementById('leaveTypeGroup');
+                const leaveBeforeGroup = document.getElementById('leaveBeforeGroup');
+                const leaveAfterGroup = document.getElementById('leaveAfterGroup');
 
                 if (value === 'ไม่ได้เดินทาง') {
                     provinceGroup.style.display = 'none'; 
@@ -408,7 +417,8 @@
                     companionGroup.style.display = 'none'; 
                     travelersGroup.style.display = 'none'; 
                     vehicleGroup.style.display = 'none'; 
-                    leaveTypeGroup.style.display = 'block';
+                    leaveBeforeGroup.style.display = 'block';
+                    leaveAfterGroup.style.display = 'block';
                     
                     provinceInput.value = ''; 
                     provinceValue.value = ''; 
@@ -419,7 +429,8 @@
                     document.getElementById('companion').value = ''; 
                     document.getElementById('travelers').value = ''; 
                     document.getElementById('vehicle').value = ''; 
-                    document.getElementById('leave0').checked = true;
+                    document.getElementById('leaveBefore0').checked = true;
+                    document.getElementById('leaveAfter0').checked = true;
                 } else if (value === 'เดินทาง') { 
                     provinceGroup.style.display = 'block'; 
                     departureDateGroup.style.display = 'block'; 
@@ -427,7 +438,8 @@
                     companionGroup.style.display = 'block'; 
                     travelersGroup.style.display = 'block'; 
                     vehicleGroup.style.display = 'block'; 
-                    leaveTypeGroup.style.display = 'block'; 
+                    leaveBeforeGroup.style.display = 'block';
+                    leaveAfterGroup.style.display = 'block';
                 }
             });
         });
@@ -483,10 +495,8 @@
 
         function formatThaiDateTime(dateString) {
             if (!dateString || dateString === '-') return '-';
-            
             try {
                 let date;
-                
                 if (dateString.includes('T') || dateString.includes('Z')) {
                     const yearMatch = dateString.match(/^(\d{4})-/);
                     if (yearMatch) {
@@ -501,30 +511,21 @@
                     const parts = dateString.split(' ');
                     const dateParts = parts[0].split('/');
                     const timeParts = parts[1] ? parts[1].split(':') : ['00', '00'];
-                    
                     const day = parseInt(dateParts[0]);
                     const month = parseInt(dateParts[1]) - 1;
                     let year = parseInt(dateParts[2]);
-                    
-                    if (year > 2500) {
-                        year = year - 543;
-                    }
-                    
+                    if (year > 2500) year = year - 543;
                     date = new Date(year, month, day, parseInt(timeParts[0]), parseInt(timeParts[1]));
                 } else {
                     date = new Date(dateString);
                 }
-                
                 if (isNaN(date.getTime())) return dateString;
-                
                 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
                 const day = date.getDate();
                 const month = thaiMonths[date.getMonth()];
                 const year = date.getFullYear() + 543;
-                
                 const hours = date.getHours().toString().padStart(2, '0');
                 const minutes = date.getMinutes().toString().padStart(2, '0');
-                
                 return `${day} ${month} ${year} ${hours}:${minutes} น.`;
             } catch (error) { 
                 return dateString; 
@@ -535,7 +536,6 @@
             if (!dateString || dateString === '-') return '-';
             try {
                 let date;
-                
                 if (dateString.includes('T') || dateString.includes('Z')) {
                     const yearMatch = dateString.match(/^(\d{4})-/);
                     if (yearMatch) {
@@ -551,21 +551,16 @@
                     const day = parseInt(dateParts[0]);
                     const month = parseInt(dateParts[1]) - 1;
                     let year = parseInt(dateParts[2]);
-                    if (year > 2500) {
-                        year = year - 543;
-                    }
+                    if (year > 2500) year = year - 543;
                     date = new Date(year, month, day);
                 } else {
                     date = new Date(dateString);
                 }
-                
                 if (isNaN(date.getTime())) return dateString;
-                
                 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
                 const day = date.getDate();
                 const month = thaiMonths[date.getMonth()];
                 const year = date.getFullYear() + 543;
-                
                 return `${day} ${month} ${year}`;
             } catch (error) { 
                 return dateString; 
@@ -575,17 +570,14 @@
         function showSuccessModal(formData) {
             const summaryBox = document.getElementById('summaryBox');
             let summaryHTML = `<div class="summary-row"><span class="summary-label">👤 รหัสพนักงาน:</span><span class="summary-value">${formData.employeeId}</span></div><div class="summary-row"><span class="summary-label">🚗 สถานะ:</span><span class="summary-value">${formData.travelStatus}</span></div>`;
-            
             if (formData.travelStatus === 'เดินทาง') {
                 const start = new Date(formData.departureDate);
                 const end = new Date(formData.returnDate);
                 const diffTime = Math.abs(end - start);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-                
                 summaryHTML += `<div class="summary-row"><span class="summary-label">📍 จังหวัด/ประเทศ:</span><span class="summary-value">${formData.province}</span></div><div class="summary-row"><span class="summary-label">📅 วันที่ไป:</span><span class="summary-value">${formatThaiDate(formData.departureDate)}</span></div><div class="summary-row"><span class="summary-label">🔙 วันที่กลับ:</span><span class="summary-value">${formatThaiDate(formData.returnDate)}</span></div><div class="summary-row"><span class="summary-label">🗓️ จำนวนวัน:</span><span class="summary-value">${diffDays} วัน</span></div><div class="summary-row"><span class="summary-label">👨‍👩‍👧‍👦 สมาชิก:</span><span class="summary-value">${formData.companion}</span></div><div class="summary-row"><span class="summary-label">👥 จำนวนคน:</span><span class="summary-value">${formData.travelers} คน</span></div><div class="summary-row"><span class="summary-label">🚗 พาหนะ:</span><span class="summary-value">${formData.vehicle}</span></div>`;
             }
-            
-            summaryHTML += `<div class="summary-row"><span class="summary-label">📅 การลาต่อจากวันหยุด:</span><span class="summary-value">${formData.leaveType}</span></div>`;
+            summaryHTML += `<div class="summary-row"><span class="summary-label">📅 การลาก่อนวันหยุด:</span><span class="summary-value">${formData.leaveBefore}</span></div><div class="summary-row"><span class="summary-label">📅 การลาหลังวันหยุด:</span><span class="summary-value">${formData.leaveAfter}</span></div>`;
             summaryBox.innerHTML = summaryHTML; 
             document.getElementById('successModal').classList.add('show');
         }
@@ -604,35 +596,33 @@
             employeeData = null; 
             shouldDeleteOldData = false; 
             existingData = null;
-            
             const formGroups = document.querySelectorAll('#restOfForm .form-group'); 
             formGroups.forEach(group => group.style.display = 'block');
-            
             document.getElementById('employeeId').focus();
         }
 
         document.getElementById('travelForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             if (!employeeData) { 
                 alert('❌ กรุณากรอกรหัสพนักงานที่ถูกต้อง'); 
                 return; 
             }
-            
             const travelStatus = document.querySelector('input[name="travelStatus"]:checked');
             if (!travelStatus) { 
                 alert('❌ กรุณาเลือกสถานะการเดินทาง'); 
                 return; 
             }
-            
-            const leaveType = document.querySelector('input[name="leaveType"]:checked');
-            if (!leaveType) { 
-                alert('❌ กรุณาเลือกประเภทการลา'); 
+            const leaveBefore = document.querySelector('input[name="leaveBefore"]:checked');
+            const leaveAfter = document.querySelector('input[name="leaveAfter"]:checked');
+            if (!leaveBefore) { 
+                alert('❌ กรุณาเลือกการลาก่อนวันหยุด'); 
                 return; 
             }
-            
+            if (!leaveAfter) { 
+                alert('❌ กรุณาเลือกการลาหลังวันหยุด'); 
+                return; 
+            }
             const travelStatusValue = travelStatus.value;
-            
             if (travelStatusValue === 'เดินทาง') {
                 let province = provinceValue.value;
                 if (province === 'อื่นๆ') { 
@@ -644,24 +634,20 @@
                     } 
                     province = otherProvince; 
                 }
-                
                 if (!province) { 
                     alert('❌ กรุณาเลือกจังหวัด/ประเทศที่เดินทางไป'); 
                     provinceInput.focus(); 
                     return; 
                 }
-                
                 const departureDate = document.getElementById('departureDate').value;
                 const returnDate = document.getElementById('returnDate').value;
                 const companion = document.getElementById('companion').value;
                 const travelers = document.getElementById('travelers').value;
                 const vehicle = document.getElementById('vehicle').value;
-                
                 if (!departureDate || !returnDate || !companion || !travelers || !vehicle) { 
                     alert('❌ กรุณากรอกข้อมูลการเดินทางให้ครบถ้วน'); 
                     return; 
                 }
-                
                 if (companion === 'อื่นๆ') { 
                     const companionOther = document.getElementById('companionOther').value.trim(); 
                     if (!companionOther) { 
@@ -670,17 +656,14 @@
                     } 
                 }
             }
-            
             const submitBtn = document.getElementById('submitBtn'); 
             submitBtn.disabled = true; 
             submitBtn.innerHTML = '<span style="position: relative; z-index: 1;">⏳ กำลังบันทึกข้อมูล...</span>';
-            
             const companionValue = document.getElementById('companion').value;
             let finalCompanion = companionValue; 
             if (companionValue === 'อื่นๆ') {
                 finalCompanion = document.getElementById('companionOther').value || companionValue;
             }
-            
             let finalProvince = '-'; 
             if (travelStatusValue === 'เดินทาง') { 
                 if (provinceValue.value === 'อื่นๆ') {
@@ -689,7 +672,6 @@
                     finalProvince = provinceValue.value || '-';
                 }
             }
-            
             const formData = { 
                 timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }), 
                 employeeId: document.getElementById('employeeId').value.toUpperCase(), 
@@ -703,18 +685,16 @@
                 companion: finalCompanion || '-', 
                 travelers: document.getElementById('travelers').value || '-', 
                 vehicle: document.getElementById('vehicle').value || '-', 
-                leaveType: leaveType.value, 
+                leaveBefore: leaveBefore.value,
+                leaveAfter: leaveAfter.value,
                 isEdit: shouldDeleteOldData 
             };
-            
             try {
                 const response = await fetch(CONFIG.WEB_APP_URL, { 
                     method: 'POST', 
                     body: JSON.stringify(formData) 
                 });
-                
                 const result = await response.json();
-                
                 if (result.status === 'success') { 
                     showSuccessModal(formData); 
                     shouldDeleteOldData = false; 
@@ -725,7 +705,6 @@
             } catch (error) { 
                 alert('❌ เกิดข้อผิดพลาดในการบันทึกข้อมูล\n' + error.message + '\n\nกรุณาตรวจสอบ:\n1. Apps Script ทำงานปกติ\n2. เชื่อมต่ออินเทอร์เน็ตได้'); 
             }
-            
             submitBtn.disabled = false; 
             submitBtn.innerHTML = '<span style="position: relative; z-index: 1;">💾 บันทึกข้อมูล</span>';
         });

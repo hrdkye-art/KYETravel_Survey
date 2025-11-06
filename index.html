@@ -450,6 +450,9 @@
             flex: 1;
             font-weight: 600;
             color: #4a5568;
+            word-break: keep-all;
+            white-space: normal;
+            line-height: 1.4;
         }
         
         .radio-option input[type="radio"]:checked + label { 
@@ -626,7 +629,9 @@
             justify-content: space-between; 
             padding: 10px 0; 
             border-bottom: 2px dashed rgba(72, 187, 120, 0.2);
-            gap: 10px; 
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-start;
         }
         
         .info-row:last-child { 
@@ -823,13 +828,21 @@
         .duplicate-info-row { 
             display: flex; 
             justify-content: space-between; 
-            padding: 10px 0; 
+            padding: 8px 0; 
             border-bottom: 1px solid rgba(240, 147, 251, 0.2);
-            gap: 10px; 
+            gap: 12px;
+            align-items: center;
         }
         
         .duplicate-info-row:last-child { 
             border-bottom: none; 
+        }
+        
+        @media (max-width: 480px) {
+            .duplicate-info-row {
+                padding: 6px 0;
+                gap: 8px;
+            }
         }
         
         .duplicate-info-label { 
@@ -900,13 +913,21 @@
         .summary-row { 
             display: flex; 
             justify-content: space-between; 
-            padding: 10px 0; 
+            padding: 8px 0; 
             border-bottom: 1px solid rgba(102, 126, 234, 0.15);
-            gap: 10px; 
+            gap: 12px;
+            align-items: center;
         }
         
         .summary-row:last-child { 
             border-bottom: none; 
+        }
+        
+        @media (max-width: 480px) {
+            .summary-row {
+                padding: 6px 0;
+                gap: 8px;
+            }
         }
         
         .summary-label { 
@@ -1068,13 +1089,13 @@
 
                 <div class="form-group">
                     <label for="departureDate">วันที่เดินทางไป <span class="required">*</span></label>
-                    <input type="date" id="departureDate" min="2025-12-25" max="2026-01-04">
+                    <input type="date" id="departureDate" min="2025-12-24" max="2026-01-04">
                     <p class="help-text">ระหว่างวันที่ 27 ธ.ค. 68 - 4 ม.ค. 69</p>
                 </div>
 
                 <div class="form-group">
                     <label for="returnDate">วันที่เดินทางกลับ <span class="required">*</span></label>
-                    <input type="date" id="returnDate" min="2025-12-27" max="2026-01-06">
+                    <input type="date" id="returnDate" min="2025-12-27" max="2026-01-07">
                     <div class="error" id="dateError"></div>
                     <p class="help-text" id="travelDays" style="display: none; color: #27ae60; font-weight: 600; margin-top: 10px;"></p>
                 </div>
@@ -1218,11 +1239,17 @@
 
         function showDuplicateModal(data) {
             const duplicateInfo = document.getElementById('duplicateInfo');
+            
+            // ใช้ชื่อย่อสำหรับมือถือ
+            const isMobile = window.innerWidth <= 480;
+            const leaveBeforeLabel = isMobile ? '📅 ลาก่อน:' : '📅 การลาก่อนวันหยุด:';
+            const leaveAfterLabel = isMobile ? '📅 ลาหลัง:' : '📅 การลาหลังวันหยุด:';
+            
             let infoHTML = `<div class="duplicate-info-row"><span class="duplicate-info-label">⏰ วันที่กรอก:</span><span class="duplicate-info-value">${formatThaiDateTime(data.timestamp)}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">👤 รหัสพนักงาน:</span><span class="duplicate-info-value">${data.employeeId}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">🚗 สถานะ:</span><span class="duplicate-info-value">${data.travelStatus}</span></div>`;
             if (data.travelStatus === 'เดินทาง') {
                 infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">📍 จังหวัด/ประเทศ:</span><span class="duplicate-info-value">${data.province}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">📅 วันที่ไป:</span><span class="duplicate-info-value">${formatThaiDate(data.departureDate)}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">🔙 วันที่กลับ:</span><span class="duplicate-info-value">${formatThaiDate(data.returnDate)}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">👥 จำนวนคน:</span><span class="duplicate-info-value">${data.travelers} คน</span></div>`;
             }
-            infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">📅 การลาก่อนวันหยุด:</span><span class="duplicate-info-value">${data.leaveBefore || 'ไม่ได้ลา'}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">📅 การลาหลังวันหยุด:</span><span class="duplicate-info-value">${data.leaveAfter || 'ไม่ได้ลา'}</span></div>`;
+            infoHTML += `<div class="duplicate-info-row"><span class="duplicate-info-label">${leaveBeforeLabel}</span><span class="duplicate-info-value">${data.leaveBefore || 'ไม่ได้ลา'}</span></div><div class="duplicate-info-row"><span class="duplicate-info-label">${leaveAfterLabel}</span><span class="duplicate-info-value">${data.leaveAfter || 'ไม่ได้ลา'}</span></div>`;
             duplicateInfo.innerHTML = infoHTML; 
             document.getElementById('duplicateModal').classList.add('show');
         }
@@ -1493,6 +1520,12 @@
 
         function showSuccessModal(formData) {
             const summaryBox = document.getElementById('summaryBox');
+            
+            // ใช้ชื่อย่อสำหรับมือถือ
+            const isMobile = window.innerWidth <= 480;
+            const leaveBeforeLabel = isMobile ? '📅 ลาก่อน:' : '📅 การลาก่อนวันหยุด:';
+            const leaveAfterLabel = isMobile ? '📅 ลาหลัง:' : '📅 การลาหลังวันหยุด:';
+            
             let summaryHTML = `<div class="summary-row"><span class="summary-label">👤 รหัสพนักงาน:</span><span class="summary-value">${formData.employeeId}</span></div><div class="summary-row"><span class="summary-label">🚗 สถานะ:</span><span class="summary-value">${formData.travelStatus}</span></div>`;
             if (formData.travelStatus === 'เดินทาง') {
                 const start = new Date(formData.departureDate);
@@ -1501,7 +1534,7 @@
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
                 summaryHTML += `<div class="summary-row"><span class="summary-label">📍 จังหวัด/ประเทศ:</span><span class="summary-value">${formData.province}</span></div><div class="summary-row"><span class="summary-label">📅 วันที่ไป:</span><span class="summary-value">${formatThaiDate(formData.departureDate)}</span></div><div class="summary-row"><span class="summary-label">🔙 วันที่กลับ:</span><span class="summary-value">${formatThaiDate(formData.returnDate)}</span></div><div class="summary-row"><span class="summary-label">🗓️ จำนวนวัน:</span><span class="summary-value">${diffDays} วัน</span></div><div class="summary-row"><span class="summary-label">👨‍👩‍👧‍👦 สมาชิก:</span><span class="summary-value">${formData.companion}</span></div><div class="summary-row"><span class="summary-label">👥 จำนวนคน:</span><span class="summary-value">${formData.travelers} คน</span></div><div class="summary-row"><span class="summary-label">🚗 พาหนะ:</span><span class="summary-value">${formData.vehicle}</span></div>`;
             }
-            summaryHTML += `<div class="summary-row"><span class="summary-label">📅 การลาก่อนวันหยุด:</span><span class="summary-value">${formData.leaveBefore}</span></div><div class="summary-row"><span class="summary-label">📅 การลาหลังวันหยุด:</span><span class="summary-value">${formData.leaveAfter}</span></div>`;
+            summaryHTML += `<div class="summary-row"><span class="summary-label">${leaveBeforeLabel}</span><span class="summary-value">${formData.leaveBefore}</span></div><div class="summary-row"><span class="summary-label">${leaveAfterLabel}</span><span class="summary-value">${formData.leaveAfter}</span></div>`;
             summaryBox.innerHTML = summaryHTML; 
             document.getElementById('successModal').classList.add('show');
         }
